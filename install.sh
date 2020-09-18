@@ -26,7 +26,18 @@ pip install -r requirements.txt
 cd $main_dir
 mkdir -p "logs"
 
+sed -i "s~{/project_dir/}~$project_dir~g" templates/supervisor/core.conf
+sed -i "s~path_to_logs~$main_dir~g" templates/supervisor/core.conf
 
+sed -i "s~{domain_or_ip}~$domain_or_ip~g" templates/nginx/main.conf
+sed -i "s~{user}~$user~g" templates/nginx/main.conf
+
+sed -i "s~{main_dir}~$main_dir~g" templates/supervisor/celery.conf
+sed -i "s~{project_dir}~$project_dir~g" templates/supervisor/celery.conf
+ 
+sudo ln -s $install_dir/templates/nginx/main.conf /etc/nginx/sites-enabled/
+sudo ln -s $install_dir/templates/supervisor/core.conf /etc/supervisor/conf.d/
+sudo ln -s $install_dir/templates/supervisor/celery.conf /etc/supervisor/conf.d/
 
 sudo supervisorctl reread
 sudo supervisorctl update
